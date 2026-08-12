@@ -5,7 +5,7 @@
 | Item | Value |
 |---|---|
 | **GitHub Repository** | https://github.com/Sakshi146-eng/crm |
-| **Live URL** | https://crm-ou6j.vercel.app/login |
+| **Live URL** | https://crm-ou6j.vercel.app |
 | **Postman Collection** | `docs/postman_collection.json` |
 
 ### 🔐 Test Login Credentials
