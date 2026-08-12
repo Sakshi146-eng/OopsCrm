@@ -18,11 +18,11 @@ ENV NODE_ENV=production
 # wget is needed for the Docker health-check probe
 RUN apk add --no-cache wget
 
-# Copy only what is needed to run
+# Copy only built artifacts
 COPY --from=builder /app/dist             ./dist
 COPY --from=builder /app/node_modules     ./node_modules
-COPY --from=builder /app/package*.json    ./
-COPY --from=builder /app/prisma          ./prisma
+COPY --from=builder /app/package.json     ./
+COPY --from=builder /app/prisma           ./prisma
 
 EXPOSE 5000
 
