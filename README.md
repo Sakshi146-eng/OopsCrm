@@ -5,8 +5,7 @@
 | Item | Value |
 |---|---|
 | **GitHub Repository** | https://github.com/Sakshi146-eng/crm |
-| **Live Frontend URL** | https://crm-ou6j.vercel.app/login |
-| **Live Backend API URL** | https://crm-h0pj.onrender.com |
+| **Live URL** | https://crm-ou6j.vercel.app/login |
 | **Postman Collection** | `docs/postman_collection.json` |
 
 ### 🔐 Test Login Credentials
@@ -420,33 +419,6 @@ The project uses a **fully managed, serverless hosting stack** — no manual ser
 
 No SSH access, firewall rules, or OS-level configuration is needed. Each platform handles TLS, scaling, and uptime.
 
-### Backend → Render
-
-1. Push code to GitHub
-2. Go to [render.com](https://render.com) → **New Web Service**
-3. Connect repository → set root directory to `backend`
-4. Build command:
-   ```
-   npm install && npx prisma generate && npx prisma db push && npm run build
-   ```
-5. Start command: `node dist/index.js`
-6. Add all environment variables from `backend/.env.example` via the Render dashboard
-
-> Or use the included `backend/render.yaml` with **Render Blueprints** for one-click setup.
-
-### Frontend → Vercel
-
-1. Go to [vercel.com](https://vercel.com) → **New Project**
-2. Import your GitHub repository
-3. Set **Root Directory** to `frontend`
-4. Framework preset: **Vite** (auto-detected)
-5. Build command: `npm run build`
-6. Output directory: `dist`
-7. Add environment variable: `VITE_API_URL=https://your-backend.onrender.com/api`
-8. Deploy
-
-The `frontend/vercel.json` handles SPA routing (React Router deep links don't 404 on refresh).
-
 ---
 
 ## ⚠️ Potential Challenges and Solutions
@@ -504,20 +476,6 @@ Import `docs/postman_collection.json` into Postman. The **Login — Admin** requ
 
 ---
 
-## ⚠️ Known Limitations & Incomplete Parts
-
-| Item | Status | Notes |
-|---|---|---|
-| Invoice module | Not implemented | The assignment scope lists Challan as the core module; confirmed challans act as invoices with product/customer snapshots |
-| PDF invoice export (server-side) | Not implemented | PDF export via `window.print()` is available on the Reports page; no dedicated per-challan PDF endpoint |
-| Stock cancellation reversal | Manual only | Cancelling a confirmed challan does **not** auto-reverse stock deductions — a manual stock-IN movement is required |
-| AWS S3 product images | Not implemented | Image upload is a bonus item; products use text-based SKU identification |
-| GitHub Actions CI/CD | Not implemented | Deployment is manual push-to-Render/Vercel; Actions pipeline is a bonus item |
-| Invoice numbering | Not implemented | Challans use auto-incremented CHN-XXXX numbers; a separate INV- series was not added |
-| Accounts role reports | Read-only | Accounts users can view all data but cannot export or filter reports — this is by design |
-| Render free-tier cold starts | Known | First request after inactivity may take ~30 seconds; use a keep-alive cron as documented above |
-
----
 
 ## 🏆 Expected Outcomes
 
