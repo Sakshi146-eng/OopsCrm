@@ -23,10 +23,10 @@ interface DashStats {
 
 // ─── Role-specific welcome banners ────────────────────────────────────────────
 const ROLE_META: Record<string, { icon: React.ElementType; color: string; bg: string; desc: string }> = {
-  ADMIN:     { icon: ShieldCheck, color: 'text-violet-400', bg: 'bg-violet-950/40 border-violet-800/50', desc: 'Full system access — manage customers, inventory, challans and reports.' },
-  SALES:     { icon: Users,       color: 'text-blue-400',   bg: 'bg-blue-950/40 border-blue-800/50',     desc: 'Manage your customers and create sales challans.' },
-  WAREHOUSE: { icon: Warehouse,   color: 'text-amber-400',  bg: 'bg-amber-950/40 border-amber-800/50',   desc: 'Monitor stock levels and record inventory movements.' },
-  ACCOUNTS:  { icon: BookOpen,    color: 'text-emerald-400',bg: 'bg-emerald-950/40 border-emerald-800/50',desc: 'Review confirmed challans and financial reports.' },
+  ADMIN:     { icon: ShieldCheck, color: 'text-violet-600 dark:text-violet-400', bg: 'bg-violet-100/80 dark:bg-violet-950/40 border-violet-300 dark:border-violet-800/50', desc: 'Full system access — manage customers, inventory, challans and reports.' },
+  SALES:     { icon: Users,       color: 'text-blue-600 dark:text-blue-400',     bg: 'bg-blue-100/80 dark:bg-blue-950/40 border-blue-300 dark:border-blue-800/50',     desc: 'Manage your customers and create sales challans.' },
+  WAREHOUSE: { icon: Warehouse,   color: 'text-amber-600 dark:text-amber-400',  bg: 'bg-amber-100/80 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800/50',   desc: 'Monitor stock levels and record inventory movements.' },
+  ACCOUNTS:  { icon: BookOpen,    color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-100/80 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800/50', desc: 'Review confirmed challans and financial reports.' },
 };
 
 export default function Dashboard() {
@@ -102,10 +102,10 @@ export default function Dashboard() {
   // ── ADMIN Dashboard ──────────────────────────────────────────────────────────
   if (role === 'ADMIN') {
     const statCards = [
-      { label: 'Total Customers', value: stats?.totalCustomers || 0, sub: `${stats?.leads || 0} Leads · ${stats?.activeCustomers || 0} Active`, icon: Users, color: 'text-blue-400', bg: 'bg-blue-950/50', link: '/customers' },
-      { label: 'Products', value: stats?.totalProducts || 0, sub: stats?.lowStockProducts ? `⚠️ ${stats.lowStockProducts} Low Stock` : 'All stock OK', icon: Package, color: stats?.lowStockProducts ? 'text-red-400' : 'text-emerald-400', bg: stats?.lowStockProducts ? 'bg-red-950/50' : 'bg-emerald-950/50', link: '/inventory' },
-      { label: 'Draft Challans', value: stats?.draftChallans || 0, sub: `${stats?.confirmedChallans || 0} Confirmed`, icon: FileText, color: 'text-amber-400', bg: 'bg-amber-950/50', link: '/challans' },
-      { label: 'Revenue (Confirmed)', value: '—', sub: 'View Reports for details', icon: TrendingUp, color: 'text-violet-400', bg: 'bg-violet-950/50', link: '/reports' },
+      { label: 'Total Customers', value: stats?.totalCustomers || 0, sub: `${stats?.leads || 0} Leads · ${stats?.activeCustomers || 0} Active`, icon: Users, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-100 dark:bg-blue-950/50', link: '/customers' },
+      { label: 'Products', value: stats?.totalProducts || 0, sub: stats?.lowStockProducts ? `⚠️ ${stats.lowStockProducts} Low Stock` : 'All stock OK', icon: Package, color: stats?.lowStockProducts ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400', bg: stats?.lowStockProducts ? 'bg-red-100 dark:bg-red-950/50' : 'bg-emerald-100 dark:bg-emerald-950/50', link: '/inventory' },
+      { label: 'Draft Challans', value: stats?.draftChallans || 0, sub: `${stats?.confirmedChallans || 0} Confirmed`, icon: FileText, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-100 dark:bg-amber-950/50', link: '/challans' },
+      { label: 'Revenue (Confirmed)', value: '—', sub: 'View Reports for details', icon: TrendingUp, color: 'text-violet-600 dark:text-violet-400', bg: 'bg-violet-100 dark:bg-violet-950/50', link: '/reports' },
     ];
     return (
       <Layout title="Dashboard" subtitle="Full system overview">
@@ -153,8 +153,8 @@ export default function Dashboard() {
           <Link to="/customers" className="stat-card group cursor-pointer">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">Total Customers</span>
-              <div className="w-8 h-8 rounded-lg bg-blue-950/50 flex items-center justify-center">
-                <Users className="w-4 h-4 text-blue-400" />
+              <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-950/50 flex items-center justify-center">
+                <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               </div>
             </div>
             <p className="text-2xl font-bold text-foreground mt-1">{stats?.totalCustomers || 0}</p>
@@ -166,8 +166,8 @@ export default function Dashboard() {
           <Link to="/challans" className="stat-card group cursor-pointer">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">Draft Challans</span>
-              <div className="w-8 h-8 rounded-lg bg-amber-950/50 flex items-center justify-center">
-                <FileText className="w-4 h-4 text-amber-400" />
+              <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-950/50 flex items-center justify-center">
+                <FileText className="w-4 h-4 text-amber-600 dark:text-amber-400" />
               </div>
             </div>
             <p className="text-2xl font-bold text-foreground mt-1">{stats?.draftChallans || 0}</p>
@@ -194,8 +194,8 @@ export default function Dashboard() {
           <Link to="/inventory" className="stat-card group cursor-pointer">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">Total Products</span>
-              <div className="w-8 h-8 rounded-lg bg-amber-950/50 flex items-center justify-center">
-                <Package className="w-4 h-4 text-amber-400" />
+              <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-950/50 flex items-center justify-center">
+                <Package className="w-4 h-4 text-amber-600 dark:text-amber-400" />
               </div>
             </div>
             <p className="text-2xl font-bold text-foreground mt-1">{stats?.totalProducts || 0}</p>
@@ -207,8 +207,8 @@ export default function Dashboard() {
           <div className="stat-card">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">Low Stock Items</span>
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${stats?.lowStockProducts ? 'bg-red-950/50' : 'bg-emerald-950/50'}`}>
-                <AlertTriangle className={`w-4 h-4 ${stats?.lowStockProducts ? 'text-red-400 animate-pulse' : 'text-emerald-400'}`} />
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${stats?.lowStockProducts ? 'bg-red-100 dark:bg-red-950/50' : 'bg-emerald-100 dark:bg-emerald-950/50'}`}>
+                <AlertTriangle className={`w-4 h-4 ${stats?.lowStockProducts ? 'text-red-600 dark:text-red-400 animate-pulse' : 'text-emerald-600 dark:text-emerald-400'}`} />
               </div>
             </div>
             <p className={`text-2xl font-bold mt-1 ${stats?.lowStockProducts ? 'text-red-400' : 'text-foreground'}`}>{stats?.lowStockProducts || 0}</p>
@@ -228,8 +228,8 @@ export default function Dashboard() {
         <Link to="/reports" className="stat-card group cursor-pointer">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-muted-foreground">Confirmed Challans</span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-950/50 flex items-center justify-center">
-              <FileText className="w-4 h-4 text-emerald-400" />
+            <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/50 flex items-center justify-center">
+              <FileText className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             </div>
           </div>
           <p className="text-2xl font-bold text-foreground mt-1">{stats?.confirmedChallans || 0}</p>
@@ -241,8 +241,8 @@ export default function Dashboard() {
         <div className="stat-card">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-muted-foreground">Pending (Draft)</span>
-            <div className="w-8 h-8 rounded-lg bg-amber-950/50 flex items-center justify-center">
-              <Clock className="w-4 h-4 text-amber-400" />
+            <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-950/50 flex items-center justify-center">
+              <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400" />
             </div>
           </div>
           <p className="text-2xl font-bold text-foreground mt-1">{stats?.draftChallans || 0}</p>
@@ -267,7 +267,7 @@ function WelcomeBanner({ name, role, meta }: { name: string; role: string; meta:
   const Icon = meta.icon;
   return (
     <div className={`flex items-center gap-4 p-4 rounded-xl border mb-6 ${meta.bg}`}>
-      <div className={`w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center flex-shrink-0`}>
+      <div className={`w-10 h-10 rounded-xl bg-white dark:bg-card border border-border flex items-center justify-center flex-shrink-0`}>
         <Icon className={`w-5 h-5 ${meta.color}`} />
       </div>
       <div>
@@ -321,10 +321,10 @@ function ChallansTable({ challans }: { challans: SalesChallan[] }) {
 function LowStockPanel({ products, expanded = false }: { products: Product[]; expanded?: boolean }) {
   if (products.length === 0 && !expanded) return null;
   return (
-    <div className="bg-card border border-red-900/50 rounded-xl overflow-hidden">
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-red-900/30 bg-red-950/20">
-        <AlertTriangle className="w-4 h-4 text-red-400" />
-        <h2 className="text-sm font-semibold text-red-400">Low Stock Alert</h2>
+    <div className="bg-card border border-red-300 dark:border-red-900/50 rounded-xl overflow-hidden">
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-red-200 dark:border-red-900/30 bg-red-50 dark:bg-red-950/20">
+        <AlertTriangle className="w-4 h-4 text-red-500 dark:text-red-400" />
+        <h2 className="text-sm font-semibold text-red-600 dark:text-red-400">Low Stock Alert</h2>
         <span className="ml-auto badge-red">{products.length}</span>
       </div>
       {products.length === 0 ? (
@@ -332,13 +332,13 @@ function LowStockPanel({ products, expanded = false }: { products: Product[]; ex
       ) : (
         <div className="p-2">
           {products.map(p => (
-            <div key={p.id} className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-red-950/20 transition-colors">
+            <div key={p.id} className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-950/20 transition-colors">
               <div>
                 <p className="text-sm font-medium text-foreground truncate max-w-[160px]">{p.name}</p>
                 <p className="text-[10px] text-muted-foreground font-mono">{p.sku}</p>
               </div>
               <div className="text-right">
-                <p className="text-sm font-bold text-red-400">{p.current_stock}</p>
+                <p className="text-sm font-bold text-red-600 dark:text-red-400">{p.current_stock}</p>
                 <p className="text-[10px] text-muted-foreground">min: {p.min_stock_alert}</p>
               </div>
             </div>
@@ -359,18 +359,18 @@ function FollowUpsPanel({ followups }: { followups: Customer[] }) {
   return (
     <div className="bg-card border border-border rounded-xl overflow-hidden">
       <div className="px-4 py-3 border-b border-border flex items-center gap-2">
-        <Clock className="w-4 h-4 text-amber-400" />
+        <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400" />
         <h2 className="text-sm font-semibold text-foreground">Upcoming Follow-ups</h2>
       </div>
       <div className="p-2">
         {followups.map(c => (
           <div key={c.id} className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-accent transition-colors">
-            <div className="w-7 h-7 rounded-full bg-amber-950 border border-amber-800 flex items-center justify-center text-amber-400 text-xs font-bold flex-shrink-0">
+            <div className="w-7 h-7 rounded-full bg-amber-100 dark:bg-amber-950 border border-amber-300 dark:border-amber-800 flex items-center justify-center text-amber-600 dark:text-amber-400 text-xs font-bold flex-shrink-0">
               {c.name.charAt(0)}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-foreground truncate">{c.name}</p>
-              <p className="text-xs text-amber-400">{formatDate(c.follow_up_date)}</p>
+              <p className="text-xs text-amber-600 dark:text-amber-400">{formatDate(c.follow_up_date)}</p>
             </div>
             <StatusPill status={c.status} />
           </div>

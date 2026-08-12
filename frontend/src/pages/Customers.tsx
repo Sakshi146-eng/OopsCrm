@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
-import { Plus, Search, Edit2, Trash2, StickyNote, X, ChevronDown } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, StickyNote, X, ChevronDown, Eye } from 'lucide-react';
+import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import StatusPill from '../components/StatusPill';
 import { api } from '../lib/api';
@@ -61,13 +63,15 @@ export default function Customers() {
     try {
       if (editingCustomer) {
         await api.customers.update(editingCustomer.id, formData);
+        toast.success('Customer updated successfully');
       } else {
         await api.customers.create(formData);
+        toast.success('Customer created successfully');
       }
       setModalOpen(false);
       fetchCustomers();
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Error saving customer');
+      toast.error(err instanceof Error ? err.message : 'Error saving customer');
     } finally { setSubmitting(false); }
   };
 
@@ -76,8 +80,9 @@ export default function Customers() {
       await api.customers.delete(c.id);
       setDeleteConfirm(null);
       fetchCustomers();
+      toast.success('Customer deleted');
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Delete failed');
+      toast.error(err instanceof Error ? err.message : 'Delete failed');
     }
   };
 
@@ -87,8 +92,9 @@ export default function Customers() {
       await api.customers.addNote(noteModal.id, noteText);
       setNoteModal(null);
       fetchCustomers();
+      toast.success('Note saved');
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Failed to save note');
+      toast.error(err instanceof Error ? err.message : 'Failed to save note');
     }
   };
 
@@ -188,6 +194,13 @@ export default function Customers() {
                 <td className="text-xs text-muted-foreground">{formatDate(c.createdAt)}</td>
                 <td>
                   <div className="flex items-center justify-end gap-1">
+                    <Link
+                      to={`/customers/${c.id}`}
+                      className="p-1.5 rounded hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
+                      title="View Detail"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                    </Link>
                     <button
                       onClick={() => { setNoteModal(c); setNoteText(c.notes || ''); }}
                       className="p-1.5 rounded hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
@@ -201,7 +214,7 @@ export default function Customers() {
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
                         {user?.role === 'ADMIN' && (
-                          <button onClick={() => setDeleteConfirm(c)} className="p-1.5 rounded hover:bg-red-950 transition-colors text-muted-foreground hover:text-red-400" title="Delete">
+                          <button onClick={() => setDeleteConfirm(c)} className="p-1.5 rounded hover:bg-destructive/15 transition-colors text-muted-foreground hover:text-destructive" title="Delete">
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         )}

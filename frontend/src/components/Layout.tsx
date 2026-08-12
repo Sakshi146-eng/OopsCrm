@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef, ReactNode } from 'react';
-import { Bell, X, AlertTriangle } from 'lucide-react';
+import { Bell, X, AlertTriangle, Sun, Moon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { api } from '../lib/api';
 import type { Product } from '../types';
 
@@ -22,20 +23,24 @@ const ROLE_COLORS: Record<string, string> = {
 
 export default function Layout({ children, title, subtitle, action }: LayoutProps) {
   const { user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [lowStockProducts, setLowStockProducts] = useState<Product[]>([]);
   const [bellOpen, setBellOpen] = useState(false);
   const bellRef = useRef<HTMLDivElement>(null);
 
   const lowStockCount = lowStockProducts.length;
 
+  const canSeeStock = user?.role === 'ADMIN' || user?.role === 'WAREHOUSE';
+
   useEffect(() => {
+    if (!canSeeStock) return;
     api.products.list()
       .then(res => {
         const low = res.data.filter((p: Product) => p.is_low_stock);
         setLowStockProducts(low);
       })
       .catch(() => {});
-  }, []);
+  }, [canSeeStock]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -50,7 +55,7 @@ export default function Layout({ children, title, subtitle, action }: LayoutProp
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      <Sidebar lowStockCount={lowStockCount} />
+      <Sidebar lowStockCount={canSeeStock ? lowStockCount : 0} />
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Header */}
@@ -59,10 +64,21 @@ export default function Layout({ children, title, subtitle, action }: LayoutProp
             <h1 className="text-lg font-semibold text-foreground">{title}</h1>
             {subtitle && <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>}
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
 
-            {/* Notification Bell */}
-            <div className="relative" ref={bellRef}>
+            {/* Theme toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground no-print"
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {theme === 'dark'
+                ? <Sun className="w-4 h-4" />
+                : <Moon className="w-4 h-4" />}
+            </button>
+
+            {/* Notification Bell — only for ADMIN & WAREHOUSE (inventory access) */}
+            {canSeeStock && <div className="relative" ref={bellRef}>
               <button
                 id="notification-bell"
                 onClick={() => setBellOpen(prev => !prev)}
@@ -82,10 +98,10 @@ export default function Layout({ children, title, subtitle, action }: LayoutProp
                 <div className="absolute right-0 top-full mt-2 w-80 bg-card border border-border rounded-xl shadow-2xl z-50 overflow-hidden">
                   <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                     <div className="flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-red-400" />
+                      <AlertTriangle className="w-4 h-4 text-red-500 dark:text-red-400" />
                       <p className="text-sm font-semibold text-foreground">Low Stock Alerts</p>
                       {lowStockCount > 0 && (
-                        <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-red-950 text-red-400 border border-red-800">
+                        <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-red-100 dark:bg-red-950 text-red-600 dark:text-red-400 border border-red-300 dark:border-red-800">
                           {lowStockCount}
                         </span>
                       )}
@@ -102,13 +118,13 @@ export default function Layout({ children, title, subtitle, action }: LayoutProp
                       </div>
                     ) : (
                       lowStockProducts.map(p => (
-                        <div key={p.id} className="flex items-center justify-between px-4 py-3 border-b border-border/50 hover:bg-red-950/20 transition-colors">
+                        <div key={p.id} className="flex items-center justify-between px-4 py-3 border-b border-border/50 hover:bg-red-100 dark:hover:bg-red-950/20 transition-colors">
                           <div>
                             <p className="text-sm font-medium text-foreground">{p.name}</p>
                             <p className="text-[10px] text-muted-foreground font-mono">{p.sku} · {p.location || 'No location'}</p>
                           </div>
                           <div className="text-right">
-                            <p className="text-sm font-bold text-red-400">{p.current_stock}</p>
+                            <p className="text-sm font-bold text-red-600 dark:text-red-400">{p.current_stock}</p>
                             <p className="text-[10px] text-muted-foreground">min: {p.min_stock_alert}</p>
                           </div>
                         </div>
@@ -129,7 +145,7 @@ export default function Layout({ children, title, subtitle, action }: LayoutProp
                   )}
                 </div>
               )}
-            </div>
+            </div>}
 
             {/* User chip */}
             {user && (

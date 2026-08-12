@@ -54,7 +54,15 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
   try {
     const customer = await prisma.customer.findUnique({
       where: { id: req.params.id as string},
-      include: { salesChallans: { orderBy: { createdAt: 'desc' }, take: 5 } },
+      include: {
+        salesChallans: {
+          orderBy: { createdAt: 'desc' },
+          take: 10,
+          include: {
+            items: true,
+          },
+        },
+      },
     });
     if (!customer) {
       res.status(404).json({ success: false, message: 'Customer not found' });

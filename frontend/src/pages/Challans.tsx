@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Plus, CheckCircle, XCircle, Eye, X, Trash2, ChevronDown } from 'lucide-react';
+import { toast } from 'sonner';
 import Layout from '../components/Layout';
 import StatusPill from '../components/StatusPill';
 import { api } from '../lib/api';
@@ -71,7 +72,7 @@ export default function Challans() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedCustomer || lineItems.some(i => !i.product_id)) {
-      alert('Please select customer and all products');
+      toast.error('Please select a customer and all products');
       return;
     }
     setSubmitting(true);
@@ -83,19 +84,20 @@ export default function Challans() {
       });
       setModalOpen(false);
       fetchChallans();
+      toast.success(`Challan created as ${createStatus}`);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Error creating challan');
+      toast.error(err instanceof Error ? err.message : 'Error creating challan');
     } finally { setSubmitting(false); }
   };
 
   const handleStatusUpdate = async (challan: SalesChallan, status: 'CONFIRMED' | 'CANCELLED') => {
-    if (!confirm(`${status === 'CONFIRMED' ? 'Confirm' : 'Cancel'} challan ${challan.challan_number}?`)) return;
     try {
       await api.challans.updateStatus(challan.id, status);
       fetchChallans();
       if (viewModal?.id === challan.id) setViewModal(null);
+      toast.success(`Challan ${challan.challan_number} ${status === 'CONFIRMED' ? 'confirmed' : 'cancelled'}`);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Error updating status');
+      toast.error(err instanceof Error ? err.message : 'Error updating status');
     }
   };
 

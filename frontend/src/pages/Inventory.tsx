@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Plus, AlertTriangle, ArrowUp, ArrowDown, Edit2, Trash2, X, Package } from 'lucide-react';
+import { toast } from 'sonner';
 import Layout from '../components/Layout';
 import { api } from '../lib/api';
 import { formatCurrency } from '../lib/utils';
@@ -49,13 +50,15 @@ export default function Inventory() {
     try {
       if (editing) {
         await api.products.update(editing.id, formData);
+        toast.success('Product updated successfully');
       } else {
         await api.products.create(formData);
+        toast.success('Product created successfully');
       }
       setModalOpen(false);
       fetchProducts();
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Error');
+      toast.error(err instanceof Error ? err.message : 'Error');
     } finally { setSubmitting(false); }
   };
 
@@ -72,8 +75,9 @@ export default function Inventory() {
       });
       setMovModal(null);
       fetchProducts();
+      toast.success(`Stock ${movType === 'IN' ? 'added' : 'deducted'} successfully`);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Error');
+      toast.error(err instanceof Error ? err.message : 'Error');
     } finally { setMovSubmitting(false); }
   };
 
@@ -89,9 +93,9 @@ export default function Inventory() {
     >
       {/* Low stock banner */}
       {lowCount > 0 && (
-        <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-950/30 border border-red-900 mb-5">
-          <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0" />
-          <p className="text-sm text-red-400 font-medium">
+        <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-300 dark:border-red-900 mb-5">
+          <AlertTriangle className="w-4 h-4 text-red-500 dark:text-red-400 flex-shrink-0" />
+          <p className="text-sm text-red-600 dark:text-red-400 font-medium">
             {lowCount} product{lowCount > 1 ? 's' : ''} below minimum stock threshold — immediate restocking required.
           </p>
         </div>
@@ -139,11 +143,11 @@ export default function Inventory() {
             ) : filtered.length === 0 ? (
               <tr><td colSpan={8} className="text-center text-muted-foreground py-12">No products found</td></tr>
             ) : filtered.map(p => (
-              <tr key={p.id} className={`table-row-hover ${p.is_low_stock ? 'bg-red-950/10' : ''}`}>
+              <tr key={p.id} className={`table-row-hover ${p.is_low_stock ? 'bg-red-50/80 dark:bg-red-950/10' : ''}`}>
                 <td>
                   <div className="flex items-center gap-2">
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${p.is_low_stock ? 'bg-red-950 border border-red-800' : 'bg-muted border border-border'}`}>
-                      {p.is_low_stock ? <AlertTriangle className="w-3.5 h-3.5 text-red-400" /> : <Package className="w-3.5 h-3.5 text-muted-foreground" />}
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${p.is_low_stock ? 'bg-red-100 dark:bg-red-950 border border-red-300 dark:border-red-800' : 'bg-muted border border-border'}`}>
+                      {p.is_low_stock ? <AlertTriangle className="w-3.5 h-3.5 text-red-500 dark:text-red-400" /> : <Package className="w-3.5 h-3.5 text-muted-foreground" />}
                     </div>
                     <span className="text-sm font-medium text-foreground">{p.name}</span>
                   </div>
@@ -153,7 +157,7 @@ export default function Inventory() {
                 <td className="text-sm font-medium">{formatCurrency(p.unit_price)}</td>
                 <td>
                   <div className="flex items-center gap-2">
-                    <span className={`text-sm font-bold ${p.is_low_stock ? 'text-red-400' : 'text-emerald-400'}`}>
+                    <span className={`text-sm font-bold ${p.is_low_stock ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
                       {p.current_stock}
                     </span>
                     {p.is_low_stock && (
@@ -169,14 +173,14 @@ export default function Inventory() {
                       <>
                         <button
                           onClick={() => { setMovModal(p); setMovType('IN'); setMovQty(1); setMovReason(''); }}
-                          className="p-1.5 rounded hover:bg-emerald-950 text-muted-foreground hover:text-emerald-400 transition-colors"
+                          className="p-1.5 rounded hover:bg-emerald-100 dark:hover:bg-emerald-950 text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
                           title="Stock IN"
                         >
                           <ArrowUp className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => { setMovModal(p); setMovType('OUT'); setMovQty(1); setMovReason(''); }}
-                          className="p-1.5 rounded hover:bg-red-950 text-muted-foreground hover:text-red-400 transition-colors"
+                          className="p-1.5 rounded hover:bg-red-100 dark:hover:bg-red-950 text-muted-foreground hover:text-red-600 dark:hover:text-red-400 transition-colors"
                           title="Stock OUT"
                         >
                           <ArrowDown className="w-3.5 h-3.5" />
@@ -185,7 +189,7 @@ export default function Inventory() {
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
                         {user?.role === 'ADMIN' && (
-                          <button onClick={() => setDeleteConfirm(p)} className="p-1.5 rounded hover:bg-red-950 text-muted-foreground hover:text-red-400 transition-colors">
+                          <button onClick={() => setDeleteConfirm(p)} className="p-1.5 rounded hover:bg-destructive/15 text-muted-foreground hover:text-destructive transition-colors">
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         )}
@@ -263,10 +267,10 @@ export default function Inventory() {
               <div>
                 <label className="form-label block mb-1">Type *</label>
                 <div className="flex gap-2">
-                  <button type="button" onClick={() => setMovType('IN')} className={`flex-1 py-2 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${movType === 'IN' ? 'border-emerald-700 bg-emerald-950 text-emerald-400' : 'border-border bg-secondary text-muted-foreground hover:bg-accent'}`}>
+                  <button type="button" onClick={() => setMovType('IN')} className={`flex-1 py-2 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${movType === 'IN' ? 'border-emerald-600 dark:border-emerald-700 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400' : 'border-border bg-secondary text-muted-foreground hover:bg-accent'}`}>
                     <ArrowUp className="w-4 h-4" /> Stock IN
                   </button>
-                  <button type="button" onClick={() => setMovType('OUT')} className={`flex-1 py-2 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${movType === 'OUT' ? 'border-red-700 bg-red-950 text-red-400' : 'border-border bg-secondary text-muted-foreground hover:bg-accent'}`}>
+                  <button type="button" onClick={() => setMovType('OUT')} className={`flex-1 py-2 rounded-lg border text-sm font-medium flex items-center justify-center gap-2 transition-colors ${movType === 'OUT' ? 'border-red-500 dark:border-red-700 bg-red-100 dark:bg-red-950 text-red-600 dark:text-red-400' : 'border-border bg-secondary text-muted-foreground hover:bg-accent'}`}>
                     <ArrowDown className="w-4 h-4" /> Stock OUT
                   </button>
                 </div>

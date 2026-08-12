@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Dark theme (default) ──────────────────────────────────────────── */
 @layer base {
   :root {
     --background: 222 47% 6%;
@@ -43,6 +44,54 @@
     --sidebar-border: 215 28% 12%;
     --sidebar-ring: 217 91% 60%;
   }
+
+  /* ── Light theme ─────────────────────────────────────────────────── */
+  html.light {
+    /* Page background — very slightly off-white */
+    --background: 220 14% 96%;
+    /* Main text — very dark navy, not pure black */
+    --foreground: 222 47% 8%;
+
+    /* Cards — pure white so they pop above the background */
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 8%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 8%;
+
+    --primary: 217 91% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary surfaces — clearly lighter than the card but not invisible */
+    --secondary: 215 25% 91%;
+    --secondary-foreground: 222 47% 8%;
+
+    /* Muted — subtle but readable grey */
+    --muted: 215 22% 88%;
+    /* Muted text — 35 % lightness ensures WCAG AA on white cards */
+    --muted-foreground: 215 20% 35%;
+
+    --accent: 215 25% 88%;
+    --accent-foreground: 222 47% 8%;
+
+    --destructive: 0 72% 46%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders — noticeably darker so card edges are visible */
+    --border: 215 18% 78%;
+    --input: 215 18% 78%;
+    --ring: 217 91% 48%;
+
+    /* Sidebar — slightly darker than the page so it has depth */
+    --sidebar-background: 220 14% 93%;
+    --sidebar-foreground: 215 20% 30%;
+    --sidebar-primary: 217 91% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 25% 88%;
+    --sidebar-accent-foreground: 222 47% 8%;
+    --sidebar-border: 215 18% 75%;
+    --sidebar-ring: 217 91% 48%;
+  }
 }
 
 @layer base {
@@ -73,20 +122,32 @@
     @apply transition-colors hover:bg-muted/40 cursor-default;
   }
   .badge-green {
-    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-950 text-emerald-400 border border-emerald-800;
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 border border-emerald-200;
   }
   .badge-yellow {
-    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-950 text-amber-400 border border-amber-800;
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700 border border-amber-200;
   }
   .badge-red {
-    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-950 text-red-400 border border-red-800;
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700 border border-red-200;
   }
   .badge-slate {
-    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700;
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200;
   }
   .badge-blue {
-    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-950 text-blue-400 border border-blue-800;
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700 border border-blue-200;
   }
+  html.dark .badge-green  { @apply bg-emerald-950 text-emerald-400 border-emerald-800; }
+  html.dark .badge-yellow { @apply bg-amber-950 text-amber-400 border-amber-800; }
+  html.dark .badge-red    { @apply bg-red-950 text-red-400 border-red-800; }
+  html.dark .badge-slate  { @apply bg-slate-800 text-slate-300 border-slate-700; }
+  html.dark .badge-blue   { @apply bg-blue-950 text-blue-400 border-blue-800; }
+  /* Light-mode badge overrides for better contrast on white cards */
+  html.light .badge-green  { @apply bg-emerald-50 text-emerald-700 border-emerald-300; }
+  html.light .badge-yellow { @apply bg-amber-50 text-amber-700 border-amber-300; }
+  html.light .badge-red    { @apply bg-red-50 text-red-700 border-red-300; }
+  html.light .badge-slate  { @apply bg-slate-100 text-slate-700 border-slate-300; }
+  html.light .badge-blue   { @apply bg-blue-50 text-blue-700 border-blue-300; }
+
   .stat-card {
     @apply rounded-xl border border-border bg-card p-5 flex flex-col gap-2 hover:border-primary/30 transition-colors;
   }
@@ -109,7 +170,10 @@
     @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors;
   }
   .btn-destructive {
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-destructive/10 text-destructive border border-destructive/20 text-sm font-medium hover:bg-destructive/20 transition-colors;
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-100 text-red-700 border border-red-200 text-sm font-medium hover:bg-red-200 transition-colors;
+  }
+  html.dark .btn-destructive {
+    @apply bg-destructive/10 text-red-400 border-destructive/20 hover:bg-destructive/20;
   }
   .form-input {
     @apply w-full rounded-lg border border-input bg-secondary px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-shadow;
@@ -125,5 +189,83 @@
   }
   .page-subtitle {
     @apply text-sm text-muted-foreground mt-0.5;
+  }
+}
+
+/* ── Print styles — used by Reports PDF download ────────────────────── */
+@media print {
+  /* Hide everything except the report content */
+  aside,
+  header,
+  .no-print,
+  button {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt;
+  }
+
+  main {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .print-header {
+    display: block !important;
+  }
+
+  /* Make tables visible and clean */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid #ddd !important;
+    padding: 6px 10px !important;
+    color: black !important;
+    background: white !important;
+  }
+
+  th {
+    background: #f0f4f8 !important;
+    font-weight: 600;
+  }
+
+  /* stat cards print well */
+  .stat-card {
+    border: 1px solid #ddd !important;
+    background: white !important;
+    break-inside: avoid;
+  }
+
+  .bg-card, .bg-secondary, .bg-muted {
+    background: white !important;
+  }
+
+  .border-border {
+    border-color: #ddd !important;
+  }
+
+  .text-foreground, .text-muted-foreground {
+    color: #333 !important;
+  }
+
+  .text-primary { color: #2563eb !important; }
+  .text-emerald-400, .text-emerald-700 { color: #059669 !important; }
+  .text-red-400, .text-red-700 { color: #dc2626 !important; }
+  .text-amber-400, .text-amber-700 { color: #d97706 !important; }
+
+  /* Page breaks */
+  .grid {
+    display: block !important;
+  }
+  .rounded-xl {
+    border-radius: 0 !important;
+    margin-bottom: 16px !important;
+    break-inside: avoid;
   }
 }

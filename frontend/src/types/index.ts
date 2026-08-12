@@ -27,6 +27,7 @@ export interface Customer {
   notes?: string;
   createdAt: string;
   updatedAt: string;
+  salesChallans?: SalesChallan[];
 }
 
 export interface Product {

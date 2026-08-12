@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BarChart3, TrendingUp, Package, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
+import { BarChart3, TrendingUp, Package, ArrowUpCircle, ArrowDownCircle, Download } from 'lucide-react';
 import Layout from '../components/Layout';
 import StatusPill from '../components/StatusPill';
 import { api } from '../lib/api';
@@ -11,6 +11,13 @@ export default function Reports() {
   const [movements, setMovements] = useState<StockMovement[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const handlePrint = () => {
+    const prevTitle = document.title;
+    document.title = `OpsPortal — Business Report — ${new Date().toLocaleDateString('en-IN')}`;
+    window.print();
+    document.title = prevTitle;
+  };
 
   useEffect(() => {
     Promise.all([
@@ -58,7 +65,29 @@ export default function Reports() {
   }
 
   return (
-    <Layout title="Reports" subtitle="Business analytics & insights">
+    <Layout
+      title="Reports"
+      subtitle="Business analytics & insights"
+      action={
+        <button onClick={handlePrint} className="btn-secondary no-print">
+          <Download className="w-4 h-4" />
+          Download PDF
+        </button>
+      }
+    >
+      {/* Print-only header — hidden on screen, shown when printing */}
+      <div className="print-header hidden mb-6 pb-4 border-b border-gray-300">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">OpsPortal — Business Report</h1>
+            <p className="text-sm text-gray-500 mt-1">Mini ERP + CRM System</p>
+          </div>
+          <div className="text-right">
+            <p className="text-sm text-gray-500">Generated on</p>
+            <p className="text-sm font-semibold text-gray-800">{new Date().toLocaleString('en-IN', { dateStyle: 'long', timeStyle: 'short' })}</p>
+          </div>
+        </div>
+      </div>
       {/* Summary KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[

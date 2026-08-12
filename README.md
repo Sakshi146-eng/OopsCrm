@@ -164,17 +164,22 @@ When a challan is confirmed (`PUT /api/challans/:id/status` with `status: CONFIR
 
 ---
 
-## Docker (Local)
+## Docker (Backend only)
+
+The `docker-compose.yml` containerises **only the backend API**. The frontend is deployed separately to a static host (Vercel / Netlify).
 
 ```bash
-# From root — ensure .env exists in project root with DATABASE_URL, DIRECT_URL, JWT_SECRET
-cp backend/.env.example .env
+# Fill in your backend environment variables first
+cp backend/.env.example backend/.env
+# Edit backend/.env: set DATABASE_URL, DIRECT_URL, JWT_SECRET
 
+# Build and start the backend container
 docker-compose up --build
 ```
 
-- Frontend: http://localhost:80
-- Backend: http://localhost:5000
+- Backend API: **http://localhost:5000**
+- The `Dockerfile` in `backend/` is a multi-stage build (builder → production).
+- `wget` is installed in the production image to satisfy the Docker health-check.
 
 ---
 
@@ -217,3 +222,15 @@ Or update `vercel.json` with your Render backend URL.
 ## Postman Collection
 
 Import `docs/postman_collection.json` into Postman. The Login — Admin request auto-saves the JWT token to a collection variable for subsequent requests.
+
+---
+
+## Assumptions
+
+- **Database**: Supabase (free tier) is used for PostgreSQL. The schema uses both a Transaction Pooler URL (port 6543) and a Direct URL (port 5432) to support Prisma migrations alongside a connection pooler.
+- **No invoice model**: The spec mentions "invoices" in the business context but does not require a separate Invoice module in core features. Confirmed challans serve as the invoice-equivalent document.
+- **PDF Export**: The Reports page exposes a **Print / Save as PDF** button that invokes `window.print()` with print-optimised CSS. This leverages the browser's native PDF export rather than a server-side PDF library.
+- **Customer detail page**: A dedicated `/customers/:id` route was not explicitly required; the customer list shows all key fields inline, and follow-up notes are editable from the list view. The backend `GET /api/customers/:id` endpoint (including last 5 challans) is ready if a detail page is added.
+- **Frontend is not containerised**: Docker is provided for the backend only. The frontend is a static React/Vite build deployed to Vercel (no server required), making a frontend container unnecessary.
+- **Role permissions for Reports**: The Reports page is read-only and accessible to all authenticated roles. Revenue and challan data is filtered by what the API returns for the logged-in user's role.
+- **Stock manipulation via API only**: Direct `current_stock` updates via `PUT /api/products/:id` are blocked; all stock changes must go through `POST /api/products/stock-movement` or the challan confirmation flow, ensuring the movement log is always populated.
