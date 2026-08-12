@@ -1,0 +1,67 @@
+{
+  "info": {
+    "name": "OpsPortal — Mini ERP + CRM API",
+    "description": "Complete API collection for the Mini ERP + CRM Operations Portal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "crm-ops-portal-v1"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api", "type": "string" },
+    { "key": "token", "value": "", "type": "string" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login — Admin",
+          "event": [{ "listen": "test", "script": { "exec": ["const res = pm.response.json(); if(res.data?.token) { pm.collectionVariables.set('token', res.data.token); pm.test('Token saved', () => pm.expect(res.data.token).to.be.a('string')); }"], "type": "text/javascript" } }],
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@company.com\",\n  \"password\": \"password123\"\n}" }, "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] } }
+        },
+        { "name": "Login — Sales", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"sales@company.com\",\n  \"password\": \"password123\"\n}" }, "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] } } },
+        { "name": "Login — Warehouse", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"warehouse@company.com\",\n  \"password\": \"password123\"\n}" }, "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] } } },
+        { "name": "Login — Accounts", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"accounts@company.com\",\n  \"password\": \"password123\"\n}" }, "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] } } },
+        { "name": "Me", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] } } },
+        { "name": "Health Check", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] } } }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        { "name": "List Customers", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/customers", "host": ["{{baseUrl}}"], "path": ["customers"], "query": [{ "key": "search", "value": "", "disabled": true }, { "key": "status", "value": "ACTIVE", "disabled": true }, { "key": "type", "value": "WHOLESALE", "disabled": true }, { "key": "page", "value": "1", "disabled": true }, { "key": "limit", "value": "20", "disabled": true }] } } },
+        { "name": "Get Customer by ID", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/customers/cust-001", "host": ["{{baseUrl}}"], "path": ["customers", "cust-001"] } } },
+        { "name": "Create Customer", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Test Customer\",\n  \"mobile\": \"9900001111\",\n  \"email\": \"test@example.com\",\n  \"business_name\": \"Test Business\",\n  \"type\": \"WHOLESALE\",\n  \"status\": \"LEAD\",\n  \"address\": \"123 Test Street, City\"\n}" }, "url": { "raw": "{{baseUrl}}/customers", "host": ["{{baseUrl}}"], "path": ["customers"] } } },
+        { "name": "Update Customer", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"status\": \"ACTIVE\",\n  \"notes\": \"Converted to active customer\"\n}" }, "url": { "raw": "{{baseUrl}}/customers/cust-001", "host": ["{{baseUrl}}"], "path": ["customers", "cust-001"] } } },
+        { "name": "Add Customer Notes", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"notes\": \"Called on 10th Aug. Interested in bulk order.\"\n}" }, "url": { "raw": "{{baseUrl}}/customers/cust-001/notes", "host": ["{{baseUrl}}"], "path": ["customers", "cust-001", "notes"] } } },
+        { "name": "Delete Customer (Admin)", "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/customers/cust-001", "host": ["{{baseUrl}}"], "path": ["customers", "cust-001"] } } }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        { "name": "List Products", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products", "host": ["{{baseUrl}}"], "path": ["products"] } } },
+        { "name": "Get Product by ID", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products/:id", "host": ["{{baseUrl}}"], "path": ["products", ":id"], "variable": [{ "key": "id", "value": "PRODUCT_ID_HERE" }] } } },
+        { "name": "Create Product", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Test Product\",\n  \"sku\": \"TEST-001\",\n  \"category\": \"Electronics\",\n  \"unit_price\": 999,\n  \"current_stock\": 50,\n  \"min_stock_alert\": 10,\n  \"location\": \"Shelf G-1\"\n}" }, "url": { "raw": "{{baseUrl}}/products", "host": ["{{baseUrl}}"], "path": ["products"] } } },
+        { "name": "Update Product", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"unit_price\": 1099,\n  \"min_stock_alert\": 15\n}" }, "url": { "raw": "{{baseUrl}}/products/:id", "host": ["{{baseUrl}}"], "path": ["products", ":id"], "variable": [{ "key": "id", "value": "PRODUCT_ID_HERE" }] } } },
+        { "name": "Stock Movement (IN)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"product_id\": \"PRODUCT_ID_HERE\",\n  \"quantity_changed\": 50,\n  \"movement_type\": \"IN\",\n  \"reason\": \"Stock received from supplier\"\n}" }, "url": { "raw": "{{baseUrl}}/products/stock-movement", "host": ["{{baseUrl}}"], "path": ["products", "stock-movement"] } } },
+        { "name": "Stock Movement (OUT)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"product_id\": \"PRODUCT_ID_HERE\",\n  \"quantity_changed\": 5,\n  \"movement_type\": \"OUT\",\n  \"reason\": \"Damaged goods removed\"\n}" }, "url": { "raw": "{{baseUrl}}/products/stock-movement", "host": ["{{baseUrl}}"], "path": ["products", "stock-movement"] } } },
+        { "name": "Stock Movement History", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products/movements/history", "host": ["{{baseUrl}}"], "path": ["products", "movements", "history"] } } }
+      ]
+    },
+    {
+      "name": "Sales Challans",
+      "item": [
+        { "name": "List Challans", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/challans", "host": ["{{baseUrl}}"], "path": ["challans"], "query": [{ "key": "status", "value": "DRAFT", "disabled": true }] } } },
+        { "name": "Get Challan by ID", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/challans/:id", "host": ["{{baseUrl}}"], "path": ["challans", ":id"], "variable": [{ "key": "id", "value": "CHALLAN_ID_HERE" }] } } },
+        { "name": "Create Draft Challan", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"customer_id\": \"cust-001\",\n  \"status\": \"DRAFT\",\n  \"items\": [\n    { \"product_id\": \"PRODUCT_ID_1\", \"quantity\": 5 },\n    { \"product_id\": \"PRODUCT_ID_2\", \"quantity\": 2 }\n  ]\n}" }, "url": { "raw": "{{baseUrl}}/challans", "host": ["{{baseUrl}}"], "path": ["challans"] } } },
+        { "name": "Create Confirmed Challan (atomic stock deduction)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"customer_id\": \"cust-002\",\n  \"status\": \"CONFIRMED\",\n  \"items\": [\n    { \"product_id\": \"PRODUCT_ID_1\", \"quantity\": 3 }\n  ]\n}" }, "url": { "raw": "{{baseUrl}}/challans", "host": ["{{baseUrl}}"], "path": ["challans"] } } },
+        { "name": "Confirm Challan (DRAFT → CONFIRMED)", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"status\": \"CONFIRMED\"\n}" }, "url": { "raw": "{{baseUrl}}/challans/:id/status", "host": ["{{baseUrl}}"], "path": ["challans", ":id", "status"], "variable": [{ "key": "id", "value": "CHALLAN_ID_HERE" }] } } },
+        { "name": "Cancel Challan", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"status\": \"CANCELLED\"\n}" }, "url": { "raw": "{{baseUrl}}/challans/:id/status", "host": ["{{baseUrl}}"], "path": ["challans", ":id", "status"], "variable": [{ "key": "id", "value": "CHALLAN_ID_HERE" }] } } }
+      ]
+    }
+  ]
+}
