@@ -21,7 +21,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 # Install wget required for Docker health checks
-RUN apk add --no-cache wget
+RUN apk add --no-cache openssl libc6-compat wget
 
 # Copy compiled JavaScript, production dependencies, and Prisma assets
 COPY --from=builder /app/dist             ./dist
