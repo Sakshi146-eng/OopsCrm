@@ -5,8 +5,8 @@
 | Item | Value |
 |---|---|
 | **GitHub Repository** | https://github.com/Sakshi146-eng/crm |
-| **Live Frontend URL** | https://crm-sakshi.vercel.app *(replace with actual Vercel URL)* |
-| **Live Backend API URL** | https://crm-backend.onrender.com/api *(replace with actual Render URL)* |
+| **Live Frontend URL** | https://crm-ou6j.vercel.app/login |
+| **Live Backend API URL** | https://crm-h0pj.onrender.com |
 | **Postman Collection** | `docs/postman_collection.json` |
 
 ### 🔐 Test Login Credentials
