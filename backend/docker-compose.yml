@@ -9,6 +9,8 @@ version: '3.8'
 #   docker-compose up --build             # starts backend on port 5000
 # ─────────────────────────────────────────────────────────────────────────────
 
+version: '3.8'
+
 services:
   backend:
     build:
